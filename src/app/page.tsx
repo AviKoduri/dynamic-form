@@ -39,15 +39,15 @@ function Home() {
   };
 
   const formData: FormField[] = [
-    { id: 1, label: "First Name", name: "firstName", type: "text", required: true, displayErrorMessage: true,      labelStyles:customLabelStyles,
-    inputStyles:customInputStyles,
-    inputContainerStyles:customInputContainerStyles
+    { id: 1, label: "First Name", name: "firstName", type: "text", required: true, displayErrorMessage: true,      labelStyles:{style:customLabelStyles},
+    inputStyles:{style:customInputStyles,className:"bg-[yellow]"},
+    inputContainerStyles:{style:customInputContainerStyles}
   },
-  { id: 1, label: "Last Name", name: "LastName", type: "text", required: true, displayErrorMessage: false,      labelStyles:customLabelStyles,
-    inputStyles:customInputStyles,
-    inputContainerStyles:customInputContainerStyles
+  { id: 1, label: "Last Name", name: "LastName", type: "text", required: true, displayErrorMessage: false,      labelStyles:{style:customLabelStyles},
+    inputStyles:{style:customInputStyles},
+    inputContainerStyles:{style:customInputContainerStyles}
   },
-    { id: 2, label: "Email", name: "email", type: "email", required: true, displayErrorMessage: false,inputStyles:customInputStyles,labelStyles:customLabelStyles,inputContainerStyles:customInputContainerStyles },
+    { id: 2, label: "Email", name: "email", type: "email", required: true, displayErrorMessage: false,inputStyles:{style:customInputStyles},labelStyles:{style:customLabelStyles},inputContainerStyles:{style:customInputContainerStyles} },
     { id: 3, label: "Password", name: "password", type: "password", required: true, displayErrorMessage: false },
         { id: 6, label: "Role", name: "role", type: "enum", required: true, displayErrorMessage: false, options: [
         { label: "Admin", value: "admin" },
@@ -69,11 +69,11 @@ function Home() {
     <h1 className='text-xl font-semibold'>Customizable Dynamic Form</h1>
     <DynamicForm
       formData={formData}
-      // labelStyles={customLabelStyles}
-      // inputStyles={customInputStyles}
+      // labelStyles={{style:customLabelStyles}}
+      // inputStyles={{style:customInputStyles}}
       // inputContainerStyles={customInputContainerStyles}
-      containerStyles={customContainerStyles}
-      buttonContainerStyles={buttonStyles}
+      containerStyles={{style:customContainerStyles}}
+      buttonContainerStyles={{style:buttonStyles}}
       onSubmitFun={handleFormSubmit}
       // ClassName="bg-[yellow]"
     />

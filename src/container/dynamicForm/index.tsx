@@ -11,17 +11,34 @@ export interface FormField {
   required: boolean;
   displayErrorMessage: boolean;
   options?: { label: string; value: string }[];
-  labelStyles?: React.CSSProperties;
-  inputStyles?: React.CSSProperties;
-  inputContainerStyles?: React.CSSProperties;
+  labelStyles?: {
+    className?:string;
+    style?:React.CSSProperties
+  };
+  inputStyles?: {
+    className?:string;
+    style?:React.CSSProperties
+  };
+  inputContainerStyles?: {
+    className?:string;
+    style?:React.CSSProperties
+  };
 
 }
 interface DynamicFormProps {
   formData: FormField[];
-  containerStyles?: React.CSSProperties;
-  buttonStyles?: React.CSSProperties;
-  buttonContainerStyles?: React.CSSProperties;
-  ClassName?: string;
+  containerStyles?: {
+    className?:string;
+    style?:React.CSSProperties
+  };
+  buttonStyles?: {
+    className?:string;
+    style?:React.CSSProperties
+  };
+  buttonContainerStyles?: {
+    className?:string;
+    style?:React.CSSProperties
+  };
   onSubmitFun?: (values: Record<string, any>) => void;
 }
 
@@ -30,7 +47,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   containerStyles = {},
   buttonStyles = {},
   buttonContainerStyles = {},
-  ClassName = "",
   onSubmitFun = (values) => {},
 }) => {
   const validationSchema = Yup.object().shape(
@@ -109,8 +125,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 <textarea
                   className={`h-[45px] w-[100%] rounded-xl border-2 ${
                     meta.touched && meta.error ? "border-[red]" : "border-grayColor"
-                  } pl-3`}
-                  style={fields?.inputStyles}
+                  } pl-3 ${fields?.inputStyles?.className}`}
+                  style={fields?.inputStyles?.style}
                   placeholder={`Enter ${fields?.label}`}
                   {...field}
                 />
@@ -127,8 +143,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 <select
                   className={`h-[45px] w-[100%] rounded-xl border-2 ${
                     meta.touched && meta.error ? "border-[red]" : "border-grayColor"
-                  } pl-3`}
-                  style={fields?.inputStyles}
+                  } pl-3 ${fields?.inputStyles?.className}`}
+                  style={fields?.inputStyles?.style}
                   {...field}
                 >
                   <option value="" disabled>Select {fields.label}</option>
@@ -153,9 +169,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     meta.touched && meta.error
                       ? "border-[red]"
                       : "border-grayColor"
-                  } pl-3`}
+                  } pl-3 ${fields?.inputStyles?.className}`}
                   type={fields.type}
-                  style={fields?.inputStyles}
+                  style={fields?.inputStyles?.style}
                   placeholder={`Enter ${fields?.label}`}
                   {...field}
                 />
@@ -176,17 +192,17 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     >
       {({ handleSubmit }) => (
         <Form onSubmit={handleSubmit} className="">
-          <div style={containerStyles}>
+          <div style={containerStyles?.style} className={`${containerStyles?.className}`}>
             {formData.map((field) => (
               <div
                 key={field.id}
-                className="flex flex-col gap-1 h-[85px]"
-                style={field?.inputContainerStyles}
+                className={`flex flex-col gap-1 h-[85px] ${field?.inputContainerStyles?.className}`}
+                style={field?.inputContainerStyles?.style}
               >
                 <label
                   htmlFor={field.name}
-                  className="text-[16px] font-semibold"
-                  style={field?.labelStyles}
+                  className={`text-[16px] font-semibold ${field?.labelStyles?.className}`}
+                  style={field?.labelStyles?.style}
                 >
                   {field.label}
                 </label>
@@ -203,11 +219,11 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               </div>
             ))}
           </div>
-          <div style={buttonContainerStyles}>
+          <div style={buttonContainerStyles?.style} className={`${buttonContainerStyles?.className}`}>
             <button
               type="submit"
-              className={`px-5 py-2 bg-primary rounded-md text-center font-semibold mt-2 ${ClassName}`}
-              style={buttonStyles}
+              className={`px-5 py-2 bg-primary rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
+              style={buttonStyles?.style}
             >
               Submit
             </button>
