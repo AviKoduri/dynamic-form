@@ -124,7 +124,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               <div>
                 <textarea
                   className={`h-[45px] w-[100%] rounded-xl border-2 ${
-                    meta.touched && meta.error ? "border-[red]" : "border-grayColor"
+                    meta.touched && meta.error ? "!border-[red]" : "border-grayColor"
                   } pl-3 ${fields?.inputStyles?.className}`}
                   style={fields?.inputStyles?.style}
                   placeholder={`Enter ${fields?.label}`}
@@ -142,7 +142,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               <div>
                 <select
                   className={`h-[45px] w-[100%] rounded-xl border-2 ${
-                    meta.touched && meta.error ? "border-[red]" : "border-grayColor"
+                    meta.touched && meta.error ? "!border-[red]" : "border-grayColor"
                   } pl-3 ${fields?.inputStyles?.className}`}
                   style={fields?.inputStyles?.style}
                   {...field}
@@ -167,7 +167,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 <input
                   className={`h-[45px] w-[100%] rounded-xl ${fields?.type !=="file" &&"border-2"} ${
                     meta.touched && meta.error
-                      ? "border-[red]"
+                      ? "!border-[red]"
                       : "border-grayColor"
                   } pl-3 ${fields?.inputStyles?.className}`}
                   type={fields.type}
