@@ -225,7 +225,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           <div style={buttonContainerStyles?.style} className={`${buttonContainerStyles?.className}`}>
             <button
               type="submit"
-              className={`px-5 py-2 bg-blue-700 rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
+              className={`px-5 py-2 bg-blue-500 text-white rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
               style={buttonStyles?.style}
             >
               Submit
