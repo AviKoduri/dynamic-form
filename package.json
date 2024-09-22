@@ -1,6 +1,6 @@
 {
   "name": "express-react-form",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "This is a dynamic form package",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,6 +23,10 @@
       "url": "https://github.com/avikoduri"
     }
   ],
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/AviKoduri/dynamic-form"
+},
   "license": "ISC",
   "keywords": [
     "react",
