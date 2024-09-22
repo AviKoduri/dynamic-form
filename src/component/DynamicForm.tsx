@@ -1,6 +1,8 @@
+import '../styles.css';
 import React from "react";
 import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
+import _ from 'lodash';
 
 export interface FormField {
   id: number;
@@ -166,7 +168,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   className={`h-[45px] w-[100%] rounded-xl ${fields?.type !=="file" &&"border-2"} ${
                     meta.touched && meta.error
                       ? "!border-[red]"
-                      : "border-grayColor"
+                      : "border-gray-700"
                   } pl-3 ${fields?.inputStyles?.className}`}
                   disabled={fields?.disabled?fields?.disabled:false}
 
@@ -223,7 +225,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           <div style={buttonContainerStyles?.style} className={`${buttonContainerStyles?.className}`}>
             <button
               type="submit"
-              className={`px-5 py-2 bg-primary rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
+              className={`px-5 py-2 bg-blue-700 rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
               style={buttonStyles?.style}
             >
               Submit

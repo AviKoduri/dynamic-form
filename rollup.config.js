@@ -4,8 +4,9 @@ import typescript from "@rollup/plugin-typescript";
 import dts from "rollup-plugin-dts";
 import terser from "@rollup/plugin-terser";
 import peerDepsExternal from "rollup-plugin-peer-deps-external";
-
 import postcss from "rollup-plugin-postcss";
+import tailwindcss from 'tailwindcss';
+import autoprefixer from 'autoprefixer';
 
 const packageJson = require("./package.json");
 
@@ -29,8 +30,16 @@ export default [
       resolve(),
       commonjs(),
       typescript({ tsconfig: "./tsconfig.json" }),
+      postcss({
+        extensions: ['.css'],
+        extract: 'styles.css',
+        minimize: true,
+        plugins: [
+          tailwindcss(),
+          autoprefixer(),
+        ],
+      }),
       terser(),
-      postcss(),
     ],
     external: ["react", "react-dom"],
   },
