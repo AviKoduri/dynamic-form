@@ -24,6 +24,20 @@
     }
   ],
   "license": "ISC",
+  "keywords": [
+    "react",
+    "express",
+    "form",
+    "dynamic form",
+    "formik",
+    "yup",
+    "tailwindcss",
+    "typescript",
+    "dynamic",
+    "dynamic-form",
+    "express-react",
+    "express-react-form"
+  ],
   "devDependencies": {
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
