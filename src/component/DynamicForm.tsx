@@ -1,6 +1,8 @@
+import '../styles.css';
 import React from "react";
 import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
+import _ from 'lodash';
 
 export interface FormField {
   id: number;
@@ -55,36 +57,36 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           case 'email':
             schema[field.name] = Yup.string()
               .email('Invalid email format')
-              .required(`${field.label} is required`);
+              .required(`${_.startCase(field.label)} is required`);
             break;
           case 'number':
             schema[field.name] = Yup.number()
-              .required(`${field.label} is required`)
-              .typeError(`${field.label} must be a number`);
+              .required(`${_.startCase(field.label)} is required`)
+              .typeError(`${_.startCase(field.label)} must be a number`);
             break;
           case 'password':
             schema[field.name] = Yup.string()
-              .required(`${field.label} is required`);
+              .required(`${_.startCase(field.label)} is required`);
             break;
 
           // case 'enum':
           //   schema[field.name] = Yup.string().oneOf(
           //     field.options || [],
-          //     `Please select a valid ${field.label}`
+          //     `Please select a valid ${_.startCase(field.label)}`
           //   );
           //   break;
 
           case 'date':
-            schema[field.name] = Yup.date().required(`${field.label} is required`);
+            schema[field.name] = Yup.date().required(`${_.startCase(field.label)} is required`);
             break;
           case 'checkbox':
-            schema[field.name] = Yup.boolean().oneOf([true], `${field.label} is required`);
+            schema[field.name] = Yup.boolean().oneOf([true], `${_.startCase(field.label)} is required`);
             break;
           case 'radio':
             schema[field.name] = Yup.string()
             //@ts-ignore
-              .oneOf(field?.options || [], `Please select a valid ${field.label}`)
-              .required(`${field.label} is required`);
+              .oneOf(field?.options || [], `Please select a valid ${_.startCase(field.label)}`)
+              .required(`${_.startCase(field.label)} is required`);
             break;
           default:
             schema[field.name] = Yup.string().required();
@@ -167,7 +169,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   className={`h-[45px] w-[100%] rounded-xl ${fields?.type !=="file" &&"border-2"} ${
                     meta.touched && meta.error
                       ? "!border-[red]"
-                      : "border-grayColor"
+                      : "border-gray-700"
                   } pl-3 ${fields?.inputStyles?.className}`}
                   type={fields.type}
                   style={fields?.inputStyles?.style}
@@ -221,7 +223,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           <div style={buttonContainerStyles?.style} className={`${buttonContainerStyles?.className}`}>
             <button
               type="submit"
-              className={`px-5 py-2 bg-primary rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
+              className={`px-5 py-2 bg-blue-700 rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
               style={buttonStyles?.style}
             >
               Submit

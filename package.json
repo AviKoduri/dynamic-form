@@ -5,18 +5,33 @@
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "style": "dist/styles.css",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "rollup": "rollup -c --bundleConfigAsCjs"
   },
   "author": "",
+  "contributors": [
+    {
+      "name": "Praveen Vuddagiri",
+      "email": "vuddagiripraveen@gmail.com",
+      "url": "https://github.com/Praveenvuddagiri"
+    },
+    {
+      "name": "Avinash Koduri",
+      "email": "saiavinashkoduri@gmail.com",
+      "url": "https://github.com/avikoduri"
+    }
+  ],
   "license": "ISC",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@types/lodash": "^4.17.7",
     "@types/react": "^18.3.3",
+    "autoprefixer": "^10.4.20",
     "react": "^18.3.1",
     "rollup": "^4.18.1",
     "rollup-plugin-dts": "^6.1.1",
@@ -27,6 +42,8 @@
   },
   "dependencies": {
     "formik": "^2.4.6",
+    "lodash": "^4.17.21",
+    "tailwindcss": "^3.4.12",
     "yup": "^1.4.0"
   }
 }
