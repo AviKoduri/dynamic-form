@@ -8,7 +8,10 @@ export interface FormField {
   name: string;
   type: 'text' | 'email' | 'password' | 'textarea' | 'number' | 'enum' |"time" | "date" | "checkbox" | "radio" | "file"; 
   required: boolean;
+  disabled?:boolean
   displayErrorMessage: boolean;
+  regexPattern?: string; 
+  value?: number | string | boolean;
   options?: { label: string; value: string }[];
   labelStyles?: {
     className?:string;
@@ -26,6 +29,7 @@ export interface FormField {
 }
 interface DynamicFormProps {
   formData: FormField[];
+  edit:boolean;
   containerStyles?: {
     className?:string;
     style?:React.CSSProperties
@@ -44,73 +48,65 @@ interface DynamicFormProps {
 const DynamicForm: React.FC<DynamicFormProps> = ({
   formData,
   containerStyles = {},
+  edit=false,
   buttonStyles = {},
   buttonContainerStyles = {},
   onSubmitFun = (values) => {},
 }) => {
   const validationSchema = Yup.object().shape(
     formData.reduce((schema, field) => {
+      let fieldValidation = Yup.string();
+  
       if (field.required) {
-        switch (field.type) {
-          case 'email':
-            schema[field.name] = Yup.string()
-              .email('Invalid email format')
-              .required(`${field.label} is required`);
-            break;
-          case 'number':
-            schema[field.name] = Yup.number()
-              .required(`${field.label} is required`)
-              .typeError(`${field.label} must be a number`);
-            break;
-          case 'password':
-            schema[field.name] = Yup.string()
-              .required(`${field.label} is required`);
-            break;
-
-          // case 'enum':
-          //   schema[field.name] = Yup.string().oneOf(
-          //     field.options || [],
-          //     `Please select a valid ${field.label}`
-          //   );
-          //   break;
-
-          case 'date':
-            schema[field.name] = Yup.date().required(`${field.label} is required`);
-            break;
-          case 'checkbox':
-            schema[field.name] = Yup.boolean().oneOf([true], `${field.label} is required`);
-            break;
-          case 'radio':
-            schema[field.name] = Yup.string()
-            //@ts-ignore
-              .oneOf(field?.options || [], `Please select a valid ${field.label}`)
-              .required(`${field.label} is required`);
-            break;
-          default:
-            schema[field.name] = Yup.string().required();
-        }
-      } else {
-        schema[field.name] = Yup.string();
+        fieldValidation = fieldValidation.required(`${field.label} is required`);
       }
+  
+      if (field.regexPattern) {
+        fieldValidation = fieldValidation.matches(
+          new RegExp(field.regexPattern),
+          `${field.label} is invalid`
+        );
+      }
+  
+      switch (field.type) {
+        case 'email':
+          fieldValidation = fieldValidation.email('Invalid email format');
+          break;
+        case 'number':
+          //@ts-ignore
+          fieldValidation = Yup.number()
+            .required(`${field.label} is required`)
+            .typeError(`${field.label} must be a number`);
+          break;
+        case 'password':
+          fieldValidation = Yup.string().required(`${field.label} is required`);
+          break;
+        case 'date':
+          //@ts-ignore
+          fieldValidation = Yup.date().required(`${field.label} is required`);
+          break;
+        case 'checkbox':
+          //@ts-ignore
+          fieldValidation = Yup.boolean().oneOf([true], `${field.label} is required`);
+          break;
+        case 'radio':
+          fieldValidation = Yup.string()
+            //@ts-ignore
+            .oneOf(field?.options?.map((option) => option.value) || [], `Please select a valid ${field.label}`)
+            .required(`${field.label} is required`);
+          break;
+      }
+  
+      schema[field.name] = fieldValidation;
       return schema;
     }, {} as Record<string, Yup.AnySchema>)
   );
   
+  
   const initialValues = formData.reduce((values, field) => {
-    switch (field.type) {
-      case 'number':
-        values[field.name] = ""; 
-        break;
-      case 'checkbox':
-        values[field.name] = false; 
-        break;
-      // case 'enum':
-      //   values[field.name] = field.options?.[0] || ''; 
-      //   break;
-
-      default:
-        values[field.name] = ''; 
-    }
+    values[field.name] = edit && field.value !== undefined ? field.value : 
+      field.type === 'checkbox' ? false : 
+      field.type === 'number' ? '' : ''; 
     return values;
   }, {} as Record<string, string | number | boolean>);
 
@@ -126,6 +122,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     meta.touched && meta.error ? "!border-[red]" : "border-grayColor"
                   } pl-3 ${fields?.inputStyles?.className}`}
                   style={fields?.inputStyles?.style}
+                  disabled={fields?.disabled?fields?.disabled:false}
                   placeholder={`Enter ${fields?.label}`}
                   {...field}
                 />
@@ -144,6 +141,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     meta.touched && meta.error ? "!border-[red]" : "border-grayColor"
                   } pl-3 ${fields?.inputStyles?.className}`}
                   style={fields?.inputStyles?.style}
+                  disabled={fields?.disabled?fields?.disabled:false}
+
                   {...field}
                 >
                   <option value="" disabled>Select {fields.label}</option>
@@ -169,6 +168,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                       ? "!border-[red]"
                       : "border-grayColor"
                   } pl-3 ${fields?.inputStyles?.className}`}
+                  disabled={fields?.disabled?fields?.disabled:false}
+
                   type={fields.type}
                   style={fields?.inputStyles?.style}
                   placeholder={`Enter ${fields?.label}`}
@@ -185,6 +186,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
+      enableReinitialize={true}
       onSubmit={(values) => {
         onSubmitFun(values);
       }}
