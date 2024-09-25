@@ -41,13 +41,13 @@ yarn add express-react-form
 or using pnpm
 
 ```bash
-yarn add express-react-form
+pnpm add express-react-form
 ```
 
 or using bun
 
 ```bash
-yarn add express-react-form
+bun add express-react-form
 ```
 
 
