@@ -129,6 +129,91 @@ The `FormField` object has the following structure:
 | inputContainerStyles | { className?: string; style?: React.CSSProperties }                                                                      | Styles for the input container.                               |
 | radioInputContainerStyles | { className?: string; style?: React.CSSProperties }                                                                      | Styles for the radio input container.                               |
 
+## FormikProps
+
+### What is `FormikProps`?
+`FormikProps` is an interface provided by Formik, a popular form management library in React. It contains various methods, properties, and state data that allow you to control and interact with forms dynamically. Using FormikProps, you can manage form values, errors, touched states, validation, submission, and more.
+
+### Key `FormikProps` Methods and Properties
+Here are some important methods and properties available in FormikProps:
+
+- ***`values`***: Stores the current values of all form fields.
+- ***`errors`***: Stores error messages for each form field, updated based on validation.
+- ***`touched`***: Tracks which fields have been touched (focused and blurred).
+- ***`isSubmitting`***: Boolean indicating whether the form is currently being submitted.
+- ***`handleSubmit`***: Function for handling form submission.
+- ***`handleChange`***: Function for handling input changes.
+- ***`handleBlur`***: Function for handling the blur event.
+- ***`setFieldValue`***: Allows setting the value of a specific field programmatically.
+- ***`setFieldError`***: Allows setting the error of a specific field programmatically.
+- ***`resetForm`***: Resets the form to its initial state.
+
+## Using `FormikProps` with `FormikRef`
+`FormikRef` allows you to access and control the Formik form programmatically via a reference. This is useful when you need to interact with the form outside of the form's immediate component (e.g., submitting the form from an external button, resetting the form, etc.).
+
+In the provided code, the form reference is handled using `useRef` to either assign an external `formikRef` passed as a prop or create an internal one if not provided. This way, the `FormikProps` instance can be accessed via this ref.
+
+## Usage
+```typescript
+"use client";
+import DynamicForm, { FormField } from "express-react-form";
+import { FormikProps } from "formik";
+import "express-react-form/dist/styles.css";
+import { useRef } from "react";
+
+function Page() {
+  const formRef = useRef<FormikProps<any>>(null);
+  // Function to handle form submission
+  const handleFormSubmit = (values: any) => {
+    console.log("Form Submitted with values:", values);
+    // Reset form after submission
+    formRef.current?.resetForm();
+  };
+  // Form fields data
+  const formData: FormField[] = [
+    {
+      id: 1,
+      label: "First Name",
+      name: "firstName",
+      type: "text",
+      required: true,
+      displayErrorMessage: true,
+      inputContainerStyles: { className: "md:w-[400px] w-[200px] h-[100px]" },
+      inputStyles: { className: "border-[yellow] rounded-[50px]" },
+    },
+    {
+      id: 2,
+      label: "Role",
+      name: "role",
+      type: "enum",
+      required: true,
+      options: [
+        { label: "Admin", value: "admin" },
+        { label: "User", value: "user" },
+      ],
+      displayErrorMessage: true,
+    },
+  ];
+
+  return (
+    <div>
+
+      {/* DynamicForm Component */}
+      <DynamicForm
+        formikRef={formRef}
+        edit={true}
+        formData={formData}
+        onSubmitFun={handleFormSubmit}
+      />
+
+      {/* Manual submit button */}
+      <button onClick={() => formRef.current?.submitForm()}>Submit</button>
+    </div>
+  );
+}
+
+export default Page;
+```
 
 ## 🎛️ Customization
 
