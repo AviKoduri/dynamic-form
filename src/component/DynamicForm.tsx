@@ -3,6 +3,7 @@ import React from "react";
 import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
 import _ from 'lodash';
+import { twMerge } from 'tailwind-merge';
 
 export interface FormField {
   id: number;
@@ -113,6 +114,8 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   }, {} as Record<string, string | number | boolean>);
 
   const renderField = (fields: FormField) => {
+    console.log(fields);
+    
     switch (fields.type) {
       case "textarea":
         return (
@@ -120,11 +123,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {({ field, form: { touched, errors }, meta }: FieldProps) => (
               <div>
                 <textarea
-                  className={`h-[45px] w-[100%] rounded-xl border-2 ${
-                    meta.touched && meta.error ? "!border-[red]" : "border-grayColor"
-                  } pl-3 ${fields?.inputStyles?.className}`}
+                  className={twMerge(
+                    'h-[45px] w-[100%] rounded-xl border-2',
+                    meta.touched && meta.error ? '!border-[red]' : 'border-grayColor',
+                    'pl-3',
+                    fields?.inputStyles?.className
+                  )}
                   style={fields?.inputStyles?.style}
-                  disabled={fields?.disabled?fields?.disabled:false}
+                  disabled={fields?.disabled ?? false}
                   placeholder={`Enter ${fields?.label}`}
                   {...field}
                 />
@@ -139,12 +145,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {({ field, form: { touched, errors }, meta }: FieldProps) => (
               <div>
                 <select
-                  className={`h-[45px] w-[100%] rounded-xl border-2 ${
-                    meta.touched && meta.error ? "!border-[red]" : "border-grayColor"
-                  } pl-3 ${fields?.inputStyles?.className}`}
+                  className={twMerge(
+                    'h-[45px] w-[100%] rounded-xl border-2',
+                    meta.touched && meta.error ? '!border-[red]' : 'border-grayColor',
+                    'pl-3',
+                    fields?.inputStyles?.className
+                  )}
                   style={fields?.inputStyles?.style}
-                  disabled={fields?.disabled?fields?.disabled:false}
-
+                  disabled={fields?.disabled ?? false}
                   {...field}
                 >
                   <option value="" disabled>Select {fields.label}</option>
@@ -165,13 +173,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
             {({ field, form: { touched, errors }, meta }: FieldProps) => (
               <div>
                 <input
-                  className={`h-[45px] w-[100%] rounded-xl ${fields?.type !=="file" &&"border-2"} ${
-                    meta.touched && meta.error
-                      ? "!border-[red]"
-                      : "border-gray-700"
-                  } pl-3 ${fields?.inputStyles?.className}`}
-                  disabled={fields?.disabled?fields?.disabled:false}
-
+                  className={twMerge(
+                    'h-[45px] w-[100%] rounded-xl',
+                    fields?.type !== "file" && 'border-2',
+                    meta.touched && meta.error ? '!border-[red]' : 'border-gray-700',
+                    'pl-3',
+                    fields?.inputStyles?.className
+                  )}
+                  disabled={fields?.disabled ?? false}
                   type={fields.type}
                   style={fields?.inputStyles?.style}
                   placeholder={`Enter ${fields?.label}`}
@@ -195,16 +204,22 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     >
       {({ handleSubmit }) => (
         <Form onSubmit={handleSubmit} className="">
-          <div style={containerStyles?.style} className={`${containerStyles?.className}`}>
+          <div style={containerStyles?.style} className={containerStyles?.className}>
             {formData.map((field) => (
               <div
                 key={field.id}
-                className={`flex flex-col gap-1 h-[85px] ${field?.inputContainerStyles?.className}`}
+                className={twMerge(
+                  'flex flex-col gap-1 h-[85px]',
+                  field?.inputContainerStyles?.className
+                )}
                 style={field?.inputContainerStyles?.style}
               >
                 <label
                   htmlFor={field.name}
-                  className={`text-[16px] font-semibold ${field?.labelStyles?.className}`}
+                  className={twMerge(
+                    'text-[16px] font-semibold',
+                    field?.labelStyles?.className
+                  )}
                   style={field?.labelStyles?.style}
                 >
                   {field.label}
@@ -212,7 +227,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
 
                 {renderField(field)}
                 {field.displayErrorMessage && (
-                  //@ts-ignore
                   <ErrorMessage
                     name={field.name}
                     component="div"
@@ -222,10 +236,13 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
               </div>
             ))}
           </div>
-          <div style={buttonContainerStyles?.style} className={`${buttonContainerStyles?.className}`}>
+          <div style={buttonContainerStyles?.style} className={buttonContainerStyles?.className}>
             <button
               type="submit"
-              className={`px-5 py-2 bg-blue-500 text-white rounded-md text-center font-semibold mt-2 ${buttonStyles?.className}`}
+              className={twMerge(
+                'px-5 py-2 bg-blue-500 text-white rounded-md text-center font-semibold mt-2',
+                buttonStyles?.className
+              )}
               style={buttonStyles?.style}
             >
               Submit
