@@ -29,22 +29,35 @@ react-dynamic-form is a powerful, lightweight form library for React application
 Install react-dynamic-form using npm:
 
 ```bash
-npm install react-dynamic-form
+npm install express-react-form
 ```
 
 Or using yarn:
 
 ```bash
-yarn add react-dynamic-form
+yarn add express-react-form
 ```
+
+or using pnpm
+
+```bash
+yarn add express-react-form
+```
+
+or using bun
+
+```bash
+yarn add express-react-form
+```
+
 
 ## Imports
 
 In your React component, import the necessary modules:
 
 ```typescript
-import DynamicForm, { FormField } from "react-dynamic-form";
-import "react-dynamic-form/dist/styles.css";
+import DynamicForm, { FormField } from "express-react-form";
+import "express-react-form/dist/styles.css";
 ```
 
 ## Basic Usage
@@ -114,7 +127,7 @@ The `FormField` object has the following structure:
 | labelStyles          | { className?: string; style?: React.CSSProperties }                                                                      | Styles for the label element.                                 |
 | inputStyles          | { className?: string; style?: React.CSSProperties }                                                                      | Styles for the input element.                                 |
 | inputContainerStyles | { className?: string; style?: React.CSSProperties }                                                                      | Styles for the input container.                               |
-
+| radioInputContainerStyles | { className?: string; style?: React.CSSProperties }                                                                      | Styles for the radio input container.                               |
 
 
 ## 🎛️ Customization
