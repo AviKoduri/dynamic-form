@@ -1,6 +1,6 @@
 import '../styles.css';
-import React from "react";
-import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
+import React, { useRef } from "react";
+import { Formik, Form, Field, ErrorMessage, FieldProps, FormikProps } from "formik";
 import * as Yup from "yup";
 import _ from 'lodash';
 import { twMerge } from 'tailwind-merge';
@@ -50,16 +50,21 @@ interface DynamicFormProps {
     style?:React.CSSProperties
   };
   onSubmitFun?: (values: Record<string, any>) => void;
+  formikRef?: React.RefObject<FormikProps<any>>;
 }
 
 const DynamicForm: React.FC<DynamicFormProps> = ({
   formData,
   containerStyles = {},
-  edit=false,
+  edit = false,
   buttonStyles = {},
   buttonContainerStyles = {},
   onSubmitFun = (values) => {},
+  formikRef: externalFormRef,
 }) => {
+  const internalFormRef = useRef<FormikProps<any>>(null);
+  const formikRef = externalFormRef || internalFormRef;
+
   const validationSchema = Yup.object().shape(
     formData.reduce((schema, field) => {
       let fieldValidation = Yup.string();
@@ -234,6 +239,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
       onSubmit={(values) => {
         onSubmitFun(values);
       }}
+      innerRef={formikRef}
     >
       {({ handleSubmit }) => (
         <Form onSubmit={handleSubmit} className="">
