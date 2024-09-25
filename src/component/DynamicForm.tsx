@@ -27,6 +27,10 @@ export interface FormField {
     className?:string;
     style?:React.CSSProperties
   };
+  radioInputContainerStyles?: {
+    className?:string;
+    style?:React.CSSProperties
+  };
 
 }
 interface DynamicFormProps {
@@ -159,6 +163,35 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           </Field>
         );
 
+        case "radio":
+          return (
+            <Field id={fields.name} name={fields.name}>
+              {({ field, meta }: FieldProps) => (
+                <div                 className={`flex flex-col gap-1 h-[85px] ${fields?.radioInputContainerStyles?.className}`}
+                style={fields?.radioInputContainerStyles?.style}
+>
+                  {fields.options?.map((option) => (
+                    <label key={option.value} className="inline-flex items-center mr-3">
+                      <input
+                        type="radio"
+                        className={`h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500 ${fields?.inputStyles?.className}`}
+                        style={fields?.inputStyles?.style}
+                        name={fields.name}
+                        value={option.value}
+                        checked={field.value === option.value}
+                        disabled={fields?.disabled ? fields?.disabled : false}
+                        onChange={(e) => field.onChange(e)}
+                      />
+                      <span className="ml-2">{option.label}</span>
+                    </label>
+                  ))}
+                  {meta.touched && meta.error && (
+                    <div className="text-[12px] leading-[13.92px] ml-2 text-[red]">{meta.error}</div>
+                  )}
+                </div>
+              )}
+            </Field>
+          );
       default:
         return (
           <Field id={fields.name} name={fields.name}>
