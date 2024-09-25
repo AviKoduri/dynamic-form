@@ -1,7 +1,6 @@
+# 🚀 react-dynamic-form: Dynamic Forms Made Easy
 
-# 🚀 express-react-form: Dynamic Forms Made Easy
-
-express-react-form is a powerful, lightweight form library for React and Express applications that lets you create stunning, functional forms with minimal effort. Say goodbye to complex setups and hello to intuitive, responsive forms that just work.
+react-dynamic-form is a powerful, lightweight form library for React applications that lets you create stunning, functional forms with minimal effort. Say goodbye to complex setups and hello to intuitive, responsive forms that just work.
 
 ## ✨ Features
 
@@ -11,8 +10,7 @@ express-react-form is a powerful, lightweight form library for React and Express
 - 📱 **Fully responsive**: Perfect on desktop, tablet, or mobile
 - 🔌 **Plug and play**: Get started with just a few lines of code
 - 🚦 **Smart submission handling**: Seamless form submissions with success and error states
-- ⚛️ **React integration**: Seamlessly works with your React components
-- 🖥️ **Express backend support**: Easy server-side handling and validation
+- ⚛️ **React integration**: Seamlessly works with your React components and frameworks like Next.js
 
 ## 🚀 Quick Start
 ## Benefits
@@ -28,16 +26,16 @@ express-react-form is a powerful, lightweight form library for React and Express
 
 ## Installation
 
-Install express-react-form using npm:
+Install react-dynamic-form using npm:
 
-```typescript
-npm install express-react-form
+```bash
+npm install react-dynamic-form
 ```
 
 Or using yarn:
 
-```typescript
-yarn add express-react-form
+```bash
+yarn add react-dynamic-form
 ```
 
 ## Imports
@@ -45,8 +43,8 @@ yarn add express-react-form
 In your React component, import the necessary modules:
 
 ```typescript
-import DynamicForm, { FormField } from "express-react-form";
-import "express-react-form/dist/styles.css";
+import DynamicForm, { FormField } from "react-dynamic-form";
+import "react-dynamic-form/dist/styles.css";
 ```
 
 ## Basic Usage
@@ -125,8 +123,8 @@ Tailor your form to perfection:
 
 ## 📄 License
 
-Express React Form is MIT licensed.
+React Dynamic Form is MIT licensed.
 
 ---
 
-Ready to craft amazing forms? Get started with Express React Form today! 🎉
+Ready to craft amazing forms? Get started with React Dynamic Form today! 🎉
