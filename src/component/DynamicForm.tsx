@@ -36,7 +36,7 @@ export interface FormField {
 }
 interface DynamicFormProps {
   formData: FormField[];
-  edit:boolean;
+  edit?:boolean;
   containerStyles?: {
     className?:string;
     style?:React.CSSProperties
