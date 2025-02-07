@@ -270,7 +270,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   )}
                   style={field?.labelStyles?.style}
                 >
-                  {field.label}
+                  {field.label}{" "}<span className='text-[red]'>*</span>
                 </label>
 
                 {renderField(field)}
