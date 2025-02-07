@@ -143,6 +143,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   placeholder={`Enter ${fields?.label}`}
                   {...field}
                 />
+                 {fields?.displayErrorMessage && meta.touched && meta.error && (
+                    <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">{meta.error}</div>
+                  )}
               </div>
             )}
           </Field>
@@ -171,6 +174,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                     </option>
                   ))}
                 </select>
+                {fields?.displayErrorMessage && meta.touched && meta.error && (
+                    <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">{meta.error}</div>
+                  )}
               </div>
             )}
           </Field>
@@ -180,14 +186,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           return (
             <Field id={fields.name} name={fields.name}>
               {({ field, meta }: FieldProps) => (
-                <div                 className={`flex flex-col gap-1 h-[85px] ${fields?.radioInputContainerStyles?.className}`}
+                <div                 className={twMerge(`flex flex-col gap-1 h-[85px]`, fields?.radioInputContainerStyles?.className)}
                 style={fields?.radioInputContainerStyles?.style}
 >
                   {fields.options?.map((option) => (
                     <label key={option.value} className="inline-flex items-center mr-3">
                       <input
                         type="radio"
-                        className={`h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500 ${fields?.inputStyles?.className}`}
+                        className={twMerge(`h-4 w-4 border-gray-300 text-blue-600 focus:ring-blue-500`,  meta.touched && meta.error ? '!border-[red]' : 'border-grayColor',fields?.inputStyles?.className)}
                         style={fields?.inputStyles?.style}
                         name={fields.name}
                         value={option.value}
@@ -198,7 +204,7 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                       <span className="ml-2">{option.label}</span>
                     </label>
                   ))}
-                  {meta.touched && meta.error && (
+                  {fields?.displayErrorMessage && meta.touched && meta.error && (
                     <div className="text-[12px] leading-[13.92px] ml-2 text-[red]">{meta.error}</div>
                   )}
                 </div>
@@ -224,6 +230,9 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   placeholder={`Enter ${fields?.label}`}
                   {...field}
                 />
+                 {fields?.displayErrorMessage && meta.touched && meta.error && (
+                    <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">{meta.error}</div>
+                  )}
               </div>
             )}
           </Field>
@@ -265,13 +274,13 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                 </label>
 
                 {renderField(field)}
-                {field.displayErrorMessage && (
+                {/* {field.displayErrorMessage && (
                   <ErrorMessage
                     name={field.name}
                     component="div"
                     className="text-[12px] leading-[13.92px] ml-2 text-[red]"
                   />
-                )}
+                )} */}
               </div>
             ))}
           </div>
