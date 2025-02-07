@@ -65,54 +65,54 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
   const internalFormRef = useRef<FormikProps<any>>(null);
   const formikRef = externalFormRef || internalFormRef;
 
-  const validationSchema = Yup.object().shape(
-    formData.reduce((schema, field) => {
-      let fieldValidation = Yup.string();
-  
-      if (field.required) {
-        fieldValidation = fieldValidation.required(`${field.label} is required`);
-      }
-  
-      if (field.regexPattern) {
-        fieldValidation = fieldValidation.matches(
-          new RegExp(field.regexPattern),
-          `${field.label} is invalid`
-        );
-      }
-  
-      switch (field.type) {
-        case 'email':
-          fieldValidation = fieldValidation.email('Invalid email format');
-          break;
-        case 'number':
+ const validationSchema = Yup.object().shape(
+  formData.reduce((schema, field) => {
+    let fieldValidation = Yup.string();
+
+    switch (field.type) {
+      case 'email':
+        fieldValidation = Yup.string().email('Invalid email format');
+        break;
+      case 'number':
+        //@ts-ignore
+        fieldValidation = Yup.number().typeError(`${field.label} must be a number`);
+        break;
+      case 'password':
+        fieldValidation = Yup.string();
+        break;
+      case 'date':
+        //@ts-ignore
+        fieldValidation = Yup.date();
+        break;
+      case 'checkbox':
+        //@ts-ignore
+        fieldValidation = Yup.boolean().oneOf([true], `${field.label} is required`);
+        break;
+      case 'radio':
+        fieldValidation = Yup.string()
           //@ts-ignore
-          fieldValidation = Yup.number()
-            .required(`${field.label} is required`)
-            .typeError(`${field.label} must be a number`);
-          break;
-        case 'password':
-          fieldValidation = Yup.string().required(`${field.label} is required`);
-          break;
-        case 'date':
-          //@ts-ignore
-          fieldValidation = Yup.date().required(`${field.label} is required`);
-          break;
-        case 'checkbox':
-          //@ts-ignore
-          fieldValidation = Yup.boolean().oneOf([true], `${field.label} is required`);
-          break;
-        case 'radio':
-          fieldValidation = Yup.string()
-            //@ts-ignore
-            .oneOf(field?.options?.map((option) => option.value) || [], `Please select a valid ${field.label}`)
-            .required(`${field.label} is required`);
-          break;
-      }
-  
-      schema[field.name] = fieldValidation;
-      return schema;
-    }, {} as Record<string, Yup.AnySchema>)
-  );
+          .oneOf(field?.options?.map((option) => option.value) || [], `Please select a valid ${field.label}`);
+        break;
+      default:
+        fieldValidation = Yup.string();
+    }
+
+    if (field.required) {
+      fieldValidation = fieldValidation.required(`${field.label} is required`);
+    }
+
+    if (field.regexPattern) {
+      fieldValidation = fieldValidation.matches(
+        new RegExp(field.regexPattern),
+        `${field.label} is invalid`
+      );
+    }
+
+    schema[field.name] = fieldValidation;
+    return schema;
+  }, {} as Record<string, Yup.AnySchema>)
+);
+
   
   
   const initialValues = formData.reduce((values, field) => {
