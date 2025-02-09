@@ -36,7 +36,7 @@ export interface FormField {
   disabled?: boolean;
   displayErrorMessage: boolean;
   regexPattern?: string;
-  value?: number | string | boolean;
+  value?: number | string | boolean | MultiSelectOption[];
   options?: MultiSelectOption[];
   labelStyles?: {
     className?: string;
@@ -54,6 +54,7 @@ export interface FormField {
     className?: string;
     style?: React.CSSProperties;
   };
+  watchField?: (value: any) => void;
 }
 interface DynamicFormProps {
   formData: FormField[];
@@ -90,10 +91,53 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
     formData.reduce((schema, field) => {
       let fieldValidation: any = Yup.string();
 
+      switch (field.type) {
+        case "email":
+          fieldValidation = fieldValidation.email("Invalid email format");
+          break;
+        case "number":
+          fieldValidation = Yup.number().typeError(
+            `${field.label} must be a number`
+          );
+          break;
+        case "password":
+          fieldValidation = Yup.string();
+          break;
+        case "multiselect":
+          fieldValidation = Yup.array().of(
+            Yup.object().shape({
+              value: Yup.string().required("Value is required"),
+              label: Yup.string().required("Label is required"),
+            })
+          );
+          break;
+        case "date":
+          fieldValidation = Yup.date();
+          break;
+        case "checkbox":
+          fieldValidation = Yup.boolean().oneOf(
+            [true],
+            `${field.label} is required`
+          );
+          break;
+        case "radio":
+          fieldValidation = Yup.string().oneOf(
+            field?.options?.map((option) => option.value) || [],
+            `Please select a valid ${field.label}`
+          );
+          break;
+      }
+
       if (field.required) {
-        fieldValidation = fieldValidation.required(
-          `${field.label} is required`
-        );
+        if (field.type === "multiselect") {
+          fieldValidation = fieldValidation.min(
+            1,
+            `${field.label} is required`
+          );
+        } else
+          fieldValidation = fieldValidation.required(
+            `${field.label} is required`
+          );
       }
 
       if (field.regexPattern) {
@@ -101,47 +145,6 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
           new RegExp(field.regexPattern),
           `${field.label} is invalid`
         );
-      }
-
-      switch (field.type) {
-        case "email":
-          fieldValidation = fieldValidation.email("Invalid email format");
-          break;
-        case "number":
-          //@ts-ignore
-          fieldValidation = Yup.number()
-            .typeError(`${field.label} must be a number`);
-          break;
-        case "password":
-          fieldValidation = Yup.string();
-          break;
-        case "multiselect":
-          fieldValidation = Yup.array()
-            .of(Yup.object().shape({
-              value: Yup.string().required("Value is required"),
-              label: Yup.string().required("Label is required"),
-            }));
-          break;
-        case "date":
-          //@ts-ignore
-          fieldValidation = Yup.date();
-          break;
-        case "checkbox":
-          //@ts-ignore
-          fieldValidation = Yup.boolean().oneOf(
-            [true],
-            `${field.label} is required`
-          );
-          break;
-        case "radio":
-          fieldValidation = Yup.string()
-            //@ts-ignore
-            .oneOf(
-              field?.options?.map((option) => option.value) || [],
-              `Please select a valid ${field.label}`
-            )
-            ;
-          break;
       }
 
       schema[field.name] = fieldValidation;
@@ -155,15 +158,11 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         ? field.value
         : field.type === "checkbox"
         ? false
-        : field.type === "number"
-        ? ""
         : "";
     return values;
-  }, {} as Record<string, string | number | boolean>);
+  }, {} as Record<string, string | number | boolean | MultiSelectOption[]>);
 
   const renderField = (fields: FormField) => {
-    console.log(fields);
-
     switch (fields.type) {
       case "textarea":
         return (
@@ -182,7 +181,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   style={fields?.inputStyles?.style}
                   disabled={fields?.disabled ?? false}
                   placeholder={`Enter ${fields?.label}`}
-                  {...field}
+                  value={field.value}
+                  onChange={(e: any) => {
+                    typeof fields.watchField == "function" &&
+                      fields.watchField(e?.target?.value);
+                    field.onChange(e);
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
                 {fields?.displayErrorMessage && meta.touched && meta.error && (
                   <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">
@@ -210,7 +216,15 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   )}
                   style={fields?.inputStyles?.style}
                   disabled={fields?.disabled ?? false}
-                  {...field}
+                  value={field.value}
+                  onChange={(e: any) => {
+                    typeof fields.watchField == "function" &&
+                      fields.watchField(e?.target?.value);
+                    field.onChange(e);
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  multiple={field.multiple}
                 >
                   <option value="" disabled>
                     Select {fields.label}
@@ -235,25 +249,29 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
         return (
           // <Field id={fields.name} name={fields.name} as="Select">
           //   {({ field, form: { touched, errors }, meta }: FieldProps) => (
-              <div>
-                <Select
-                  options={fields.options}
-                  className={twMerge(
-                    fields?.inputStyles?.className
-                  )}
-                  isDisabled={fields?.disabled ?? false}
-                  isMulti={true}
-                  name={fields.name}
-                  value={formikRef.current?.values[fields.name]}
-                  onChange={(val: any) => formikRef.current?.setFieldValue(fields.name, val)}
-                  placeholder={`Select ${fields.label}`}
-                />
-                {fields?.displayErrorMessage && formikRef.current?.touched && formikRef.current.errors[fields.name] && (
-                  <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">
-                   {formikRef.current.errors[fields.name]?.toString()}
-                  </div>
-                )}
-              </div>
+          <div>
+            <Select
+              options={fields.options}
+              className={twMerge(fields?.inputStyles?.className)}
+              isDisabled={fields?.disabled ?? false}
+              isMulti={true}
+              name={fields.name}
+              value={formikRef.current?.values[fields.name]}
+              onChange={(val: any) => {
+                typeof fields.watchField == "function" &&
+                  fields.watchField(val);
+                formikRef.current?.setFieldValue(fields.name, val);
+              }}
+              placeholder={`Select ${fields.label}`}
+            />
+            {fields?.displayErrorMessage &&
+              formikRef.current?.touched?.[fields.name] &&
+              formikRef.current.errors[fields.name] && (
+                <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">
+                  {formikRef.current.errors[fields.name]?.toString()}
+                </div>
+              )}
+          </div>
           //   )}
           // </Field>
         );
@@ -288,13 +306,55 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                       value={option.value}
                       checked={field.value === option.value}
                       disabled={fields?.disabled ? fields?.disabled : false}
-                      onChange={(e) => field.onChange(e)}
+                      onChange={(e) => {
+                        typeof fields.watchField == "function" &&
+                          fields.watchField(e?.target.value);
+                        field.onChange(e);
+                      }}
                     />
                     <span className="ml-2">{option.label}</span>
                   </label>
                 ))}
                 {fields?.displayErrorMessage && meta.touched && meta.error && (
                   <div className="text-[12px] leading-[13.92px] ml-2 text-[red]">
+                    {meta.error}
+                  </div>
+                )}
+              </div>
+            )}
+          </Field>
+        );
+      case "checkbox":
+        return (
+          <Field id={fields.name} name={fields.name}>
+            {({ field, form: { touched, errors }, meta }: FieldProps) => (
+              <div>
+                <input
+                  className={twMerge(
+                    "h-[45px] w-[100%] rounded-xl",
+                    fields?.type !== "file" && "border-2",
+                    meta.touched && meta.error
+                      ? "!border-[red]"
+                      : "border-gray-700",
+                    "pl-3",
+                    fields?.inputStyles?.className
+                  )}
+                  disabled={fields?.disabled ?? false}
+                  type={fields.type}
+                  style={fields?.inputStyles?.style}
+                  placeholder={`Enter ${fields?.label}`}
+                  // value={field.value}
+                  onChange={(e: any) => {
+                    typeof fields.watchField == "function" &&
+                      fields.watchField(e?.target?.value);
+                    field.onChange(e);
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  checked={field.value}
+                />
+                {fields?.displayErrorMessage && meta.touched && meta.error && (
+                  <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">
                     {meta.error}
                   </div>
                 )}
@@ -321,7 +381,14 @@ const DynamicForm: React.FC<DynamicFormProps> = ({
                   type={fields.type}
                   style={fields?.inputStyles?.style}
                   placeholder={`Enter ${fields?.label}`}
-                  {...field}
+                  value={field.value}
+                  onChange={(e: any) => {
+                    typeof fields.watchField == "function" &&
+                      fields.watchField(e?.target?.value);
+                    field.onChange(e);
+                  }}
+                  onBlur={field.onBlur}
+                  name={field.name}
                 />
                 {fields?.displayErrorMessage && meta.touched && meta.error && (
                   <div className="text-[12px] leading-[13.92px] ml-2 text-[red] mt-2">
